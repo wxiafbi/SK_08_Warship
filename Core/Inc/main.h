@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.h
-  * @brief          : Header for main.c file.
-  *                   This file contains the common defines of the application.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.h
+ * @brief          : Header for main.c file.
+ *                   This file contains the common defines of the application.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2022 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -57,20 +57,20 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define KEY2_Pin GPIO_PIN_2
+#define KEY2_Pin       GPIO_PIN_2
 #define KEY2_GPIO_Port GPIOE
 #define KEY2_EXTI_IRQn EXTI2_IRQn
-#define KEY1_Pin GPIO_PIN_3
+#define KEY1_Pin       GPIO_PIN_3
 #define KEY1_GPIO_Port GPIOE
 #define KEY1_EXTI_IRQn EXTI3_IRQn
-#define KEY0_Pin GPIO_PIN_4
+#define KEY0_Pin       GPIO_PIN_4
 #define KEY0_GPIO_Port GPIOE
 #define KEY0_EXTI_IRQn EXTI4_IRQn
-#define LED1_Pin GPIO_PIN_5
+#define LED1_Pin       GPIO_PIN_5
 #define LED1_GPIO_Port GPIOE
-#define LED0_Pin GPIO_PIN_5
+#define LED0_Pin       GPIO_PIN_5
 #define LED0_GPIO_Port GPIOB
-#define BEEP_Pin GPIO_PIN_8
+#define BEEP_Pin       GPIO_PIN_8
 #define BEEP_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
