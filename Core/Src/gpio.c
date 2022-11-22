@@ -85,13 +85,13 @@ void MX_GPIO_Init(void)
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     /* EXTI interrupt init*/
-    HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(EXTI2_IRQn, 1, 0);
     HAL_NVIC_EnableIRQ(EXTI2_IRQn);
 
-    HAL_NVIC_SetPriority(EXTI3_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(EXTI3_IRQn, 1, 1);
     HAL_NVIC_EnableIRQ(EXTI3_IRQn);
 
-    HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(EXTI4_IRQn, 1, 2);
     HAL_NVIC_EnableIRQ(EXTI4_IRQn);
 }
 
@@ -103,5 +103,33 @@ void BEEP_500MS(void)
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
     HAL_Delay(500);
     printf("小玖\r\n");
+}
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    /* Prevent unused argument(s) compilation warning */
+    UNUSED(GPIO_Pin);
+    /* NOTE: This function Should not be modified, when the callback is needed,
+             the HAL_GPIO_EXTI_Callback could be implemented in the user file
+     */
+    if (GPIO_Pin == GPIO_PIN_2) {
+
+        if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_2) == GPIO_PIN_RESET) {
+            HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
+        }
+        __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_2);
+    } else if (GPIO_Pin == GPIO_PIN_3) {
+
+        if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_3) == GPIO_PIN_RESET) {
+            HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
+        }
+        __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_3);
+    } else if (GPIO_Pin == GPIO_PIN_4) {
+
+        if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_4) == GPIO_PIN_RESET) {
+            HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
+            HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
+        }
+        __HAL_GPIO_EXTI_CLEAR_IT(EXTI4_IRQn);
+    }
 }
 /* USER CODE END 2 */
