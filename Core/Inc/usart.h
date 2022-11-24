@@ -29,8 +29,7 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
-#include <string.h>
+
 /* USER CODE END Includes */
 
 extern UART_HandleTypeDef huart1;
@@ -38,8 +37,7 @@ extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN Private defines */
-extern uint8_t aRxBuffer;           //接收中断缓冲
-extern uint8_t sk08_aRxBuffer; //接收中断缓冲
+
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);
