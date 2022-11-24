@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -36,7 +37,8 @@ uint8_t USART3_RX_BUF[U3_RXBUFFERSIZE];
 uint8_t sk08_aRxBuffer; //接收中断缓冲
 char fina_data1[5];
 int finaldata1;
-uint8_t str1[4] = {0x80, 0x06, 0x02, 0x78};
+uint8_t str1[4] = {0x80, 0x06, 0x02, 0x78};    //单次测量命令
+uint8_t str2[4] = {0x80, 0x06, 0x07, 0x75};    //读取缓存数据
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,9 +102,11 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-    HAL_UART_Receive_IT(&huart1, (uint8_t *)&aRxBuffer, 1);
-    HAL_UART_Receive_IT(&huart2, (uint8_t *)&sk08_aRxBuffer, 1);
+  HAL_UART_Receive_IT(&huart1, (uint8_t *)&aRxBuffer, 1);
+  HAL_UART_Receive_IT(&huart2, (uint8_t *)&sk08_aRxBuffer, 1);
+  HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -111,10 +115,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-        HAL_UART_Transmit(&huart2, (uint8_t *)&str1, 4, 0xffff);
-        HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_5);
-        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5);
-        HAL_Delay(2000);
+        //HAL_UART_Transmit(&huart2, (uint8_t *)&str1, 4, 0xffff);
     }
   /* USER CODE END 3 */
 }
@@ -216,7 +217,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             USART3_RX_BUF[seri_count++] = sk08_aRxBuffer;
             if (seri_count == 11) {
                 if (USART3_RX_BUF[0] == 0x80) {
-                    // beep_on_200ms();
                     for (i = 0; i < 11 - 1; i++) {
                         check_sum += USART3_RX_BUF[i];
                         printf(" 0x%x",USART3_RX_BUF[i]);
@@ -231,7 +231,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                         fina_data1[3] = USART3_RX_BUF[8];      //小数点后两位
                         fina_data1[4] = USART3_RX_BUF[9];      //小数点后三位
                         sscanf(fina_data1, "%d", &finaldata1); //字符串转int
-                        // HAL_Delay(10);
                         printf("距离值=%dmm\r\n", finaldata1); // print用串口1，串口2用来和激光模块通讯
                         /* code */
                         for (x = 0; x < 6; x++) {
@@ -246,7 +245,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         HAL_UART_Receive_IT(&huart2, (uint8_t *)&sk08_aRxBuffer, 1);
     }
 }
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    static unsigned char ledState = 0;
+    if (htim == (&htim2))
+    {
+        HAL_UART_Transmit(&huart2, (uint8_t *)&str1, 4, 0xffff);
+        //printf("定时器中断\r\n");
+        if (ledState == 0)
+            HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_RESET);
+        else
+            HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_SET);
+        ledState = !ledState;
+    }
+}
 /* USER CODE END 4 */
 
 /**
