@@ -21,7 +21,8 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
-
+extern UART_HandleTypeDef huart2;
+extern uint8_t str1[4];
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim2;
@@ -107,5 +108,18 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 }
 
 /* USER CODE BEGIN 1 */
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    static unsigned char ledState = 0;
+    if (htim == (&htim2))
+    {
+        HAL_UART_Transmit(&huart2, (uint8_t *)&str1, 4, 0xffff);
+        //printf("¶¨Ê±Æ÷ÖÐ¶Ï\r\n");
+        if (ledState == 0)
+            HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_RESET);
+        else
+            HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_SET);
+        ledState = !ledState;
+    }
+}
 /* USER CODE END 1 */

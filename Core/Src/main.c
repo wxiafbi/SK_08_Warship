@@ -24,21 +24,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
-#include <string.h>
 
-#define RXBUFFERSIZE 256     //最大接收字节数
-char RxBuffer[RXBUFFERSIZE]; //接收数据
-uint8_t aRxBuffer;           //接收中断缓冲
-uint8_t Uart1_Rx_Cnt = 0;    //接收缓冲计数
 
-#define U3_RXBUFFERSIZE 36
-uint8_t USART3_RX_BUF[U3_RXBUFFERSIZE];
-uint8_t sk08_aRxBuffer; //接收中断缓冲
-char fina_data1[5];
-int finaldata1;
-uint8_t str1[4] = {0x80, 0x06, 0x02, 0x78};    //单次测量命令
-uint8_t str2[4] = {0x80, 0x06, 0x07, 0x75};    //读取缓存数据
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -160,105 +148,8 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-#ifdef __GNUC__
-#define PUTCHAR_PROTOTYPE int _io_putchar(int ch)
-#else
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif /* __GNUC__*/
 
-/******************************************************************
- *@brief  Retargets the C library printf  function to the USART.
- *@param  None
- *@retval None
- ******************************************************************/
-PUTCHAR_PROTOTYPE
-{
-    HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
-    return ch;
-}
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    /* Prevent unused argument(s) compilation warning */
-    UNUSED(huart);
-    /* NOTE: This function Should not be modified, when the callback is needed,
-             the HAL_UART_TxCpltCallback could be implemented in the user file
-     */
-    static uint8_t seri_count = 0;
-    uint8_t check_sum         = 0;
-    uint8_t i, x;
-
-    static uint8_t uflag = 0;
-
-    if (huart == &huart1) {
-        if (Uart1_Rx_Cnt >= 255) //溢出判断
-        {
-            Uart1_Rx_Cnt = 0;
-            memset(RxBuffer, 0x00, sizeof(RxBuffer));
-            HAL_UART_Transmit(&huart1, (uint8_t *)"数据溢出", 10, 0xFFFF);
-        } else {
-            RxBuffer[Uart1_Rx_Cnt++] = aRxBuffer;                                             //接收数据转存
-            if ((RxBuffer[Uart1_Rx_Cnt - 1] == 0x0A) && (RxBuffer[Uart1_Rx_Cnt - 2] == 0x0D)) //判断结束位
-            {
-                HAL_UART_Transmit(&huart1, (uint8_t *)&RxBuffer, Uart1_Rx_Cnt, 0xFFFF); //将收到的信息发送出去
-                while (HAL_UART_GetState(&huart1) == HAL_UART_STATE_BUSY_TX)
-                    ; //检测UART发送结束
-                Uart1_Rx_Cnt = 0;
-                memset(RxBuffer, 0x00, sizeof(RxBuffer)); //清空数组
-            }
-        }
-        HAL_UART_Receive_IT(&huart1, (uint8_t *)&aRxBuffer, 1); //再开启接收中断
-    }
-    if (huart == &huart2) {
-        if (sk08_aRxBuffer == 0x80) {
-            uflag = 1;
-        }
-        if (uflag) {
-            USART3_RX_BUF[seri_count++] = sk08_aRxBuffer;
-            if (seri_count == 11) {
-                if (USART3_RX_BUF[0] == 0x80) {
-                    for (i = 0; i < 11 - 1; i++) {
-                        check_sum += USART3_RX_BUF[i];
-                        printf(" 0x%x",USART3_RX_BUF[i]);
-                    }
-                    printf(" 0x%x",USART3_RX_BUF[10]);
-                    check_sum = ~check_sum + 1;
-                    if (check_sum == USART3_RX_BUF[10]) {
-                        fina_data1[0] = USART3_RX_BUF[4]; //十位数
-                        fina_data1[1] = USART3_RX_BUF[5]; //个位数
-                        // data[6]是小数点.
-                        fina_data1[2] = USART3_RX_BUF[7];      //小数点后一位
-                        fina_data1[3] = USART3_RX_BUF[8];      //小数点后两位
-                        fina_data1[4] = USART3_RX_BUF[9];      //小数点后三位
-                        sscanf(fina_data1, "%d", &finaldata1); //字符串转int
-                        printf("距离值=%dmm\r\n", finaldata1); // print用串口1，串口2用来和激光模块通讯
-                        /* code */
-                        for (x = 0; x < 6; x++) {
-                            fina_data1[x] = 0;
-                        }
-                    }
-                    seri_count = 0;
-                    uflag      = 0;
-                }
-            }
-        }
-        HAL_UART_Receive_IT(&huart2, (uint8_t *)&sk08_aRxBuffer, 1);
-    }
-}
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-    static unsigned char ledState = 0;
-    if (htim == (&htim2))
-    {
-        HAL_UART_Transmit(&huart2, (uint8_t *)&str1, 4, 0xffff);
-        //printf("定时器中断\r\n");
-        if (ledState == 0)
-            HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_RESET);
-        else
-            HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_SET);
-        ledState = !ledState;
-    }
-}
 /* USER CODE END 4 */
 
 /**
