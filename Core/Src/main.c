@@ -37,6 +37,7 @@ char USART3_RX_BUF[RXBUFFERSIZE];
 uint8_t str1[4] = {0x80, 0x06, 0x02, 0x78};
 char fina_data1[5];
 int finaldata1;
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -105,6 +106,7 @@ int main(void)
     HAL_UART_Receive_IT(&huart1, (uint8_t *)&aRxBuffer, 1);
     HAL_UART_Receive_IT(&huart2, (uint8_t *)&sk08_aRxBuffer, 1);
     HAL_TIM_Base_Start_IT(&htim2);
+    printf("--------------------------------------------------------------------\r\n");
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -243,8 +245,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     static unsigned char ledState = 0;
     if (htim == (&htim2)) {
-        HAL_UART_Transmit(&huart2, (uint8_t *)&str1, 4, 0xffff);
-        // printf("定时器中断\r\n");
+
+        monitor();
         if (ledState == 0) {
             HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
@@ -253,6 +255,52 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
             HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
         }
         ledState = !ledState;
+    }
+}
+
+char flag = 0;
+int L1 = 0, L2 = 0, L3 = 0, L4 = 0, L5 = 0;
+void monitor(void)
+{
+
+    printf(" L1=%d", L1);
+    printf(" L2=%d", L2);
+    printf(" L3=%d", L3);
+    printf(" L4=%d", L4);
+    printf(" L5=%d", L5);
+    char u = 0;
+    while (u == 0) {
+        /* code */
+        HAL_UART_Transmit(&huart2, (uint8_t *)&str1, 4, 0xffff);
+        u += 1;
+        if (/* condition */ finaldata1 > 6000) {
+            /* code */
+            u = 0;
+        }
+    }
+    if (flag == 0) {
+        L1 = finaldata1;
+    }
+    if (flag == 1) {
+        L2 = finaldata1;
+    }
+    if (flag == 2) {
+        L3 = finaldata1;
+    }
+    if (flag == 3) {
+        L4 = finaldata1;
+    }
+    if (flag == 4) {
+        L5 = finaldata1;
+    }
+    if (L1 - L2 > 100 || L2 - L3 > 100 || L3 - L4 > 100 || L4 - L5 > 100) {
+        /* code */
+        
+        printf("有人闯入\r\n");
+    }
+    flag++;
+    if (flag == 5) {
+        flag = 0;
     }
 }
 /* USER CODE END 4 */

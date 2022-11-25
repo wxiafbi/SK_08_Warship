@@ -100,9 +100,9 @@ void MX_GPIO_Init(void)
 void BEEP_500MS(void)
 {
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-    HAL_Delay(500);
+    HAL_Delay(200);
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
-    HAL_Delay(500);
+    HAL_Delay(200);
     printf("小玖\r\n");
 }
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
