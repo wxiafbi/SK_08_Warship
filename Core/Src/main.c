@@ -32,7 +32,11 @@ char RxBuffer[RXBUFFERSIZE];   //接收数据
 uint8_t aRxBuffer;			//接收中断缓冲
 uint8_t Uart1_Rx_Cnt = 0;		//接收缓冲计数
 
-
+uint8_t sk08_aRxBuffer;
+char USART3_RX_BUF[RXBUFFERSIZE];
+uint8_t str1[4]={0x80,0x06,0x02,0x78};
+char fina_data1[5];
+int finaldata1;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

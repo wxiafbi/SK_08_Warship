@@ -21,8 +21,7 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
-extern UART_HandleTypeDef huart2;
-extern uint8_t str1[4];
+
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim2;
