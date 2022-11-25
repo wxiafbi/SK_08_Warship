@@ -24,7 +24,8 @@
             "editor.tabSize": 4,
             "editor.autoIndent": "advanced"
         },
-        "commentTranslate.source": "Bing"
+        "commentTranslate.source": "Bing",
+        "EIDE.SerialPortMonitor.BaudRate": 9600
     },
     "extensions": {
         "recommendations": [
