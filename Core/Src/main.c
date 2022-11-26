@@ -245,7 +245,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     static unsigned char ledState = 0;
     if (htim == (&htim2)) {
-
         monitor();
         if (ledState == 0) {
             HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, GPIO_PIN_RESET);
@@ -262,12 +261,12 @@ char flag = 0;
 int L1 = 0, L2 = 0, L3 = 0, L4 = 0, L5 = 0;
 void monitor(void)
 {
+    char u = 0;
     printf(" L1=%d", L1);
     printf(" L2=%d", L2);
     printf(" L3=%d", L3);
     printf(" L4=%d", L4);
     printf(" L5=%d", L5);
-    char u = 0;
     while (u == 0) {
         /* code */
         HAL_UART_Transmit(&huart2, (uint8_t *)&str1, 4, 0xffff);
