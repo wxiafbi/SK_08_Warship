@@ -262,7 +262,6 @@ char flag = 0;
 int L1 = 0, L2 = 0, L3 = 0, L4 = 0, L5 = 0;
 void monitor(void)
 {
-
     printf(" L1=%d", L1);
     printf(" L2=%d", L2);
     printf(" L3=%d", L3);
@@ -273,8 +272,7 @@ void monitor(void)
         /* code */
         HAL_UART_Transmit(&huart2, (uint8_t *)&str1, 4, 0xffff);
         u += 1;
-        if (/* condition */ finaldata1 > 6000) {
-            /* code */
+        if (finaldata1 > 6000) {
             u = 0;
         }
     }
@@ -295,7 +293,6 @@ void monitor(void)
     }
     if (L1 - L2 > 100 || L2 - L3 > 100 || L3 - L4 > 100 || L4 - L5 > 100) {
         /* code */
-        
         printf("”–»À¥≥»Î\r\n");
     }
     flag++;
