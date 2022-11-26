@@ -115,7 +115,7 @@ int main(void)
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-        //callback(BEEP_500MS);
+        callback(500, BEEP_500MS_on, BEEP_500MS_off);
         HAL_Delay(5000);
     }
     /* USER CODE END 3 */
@@ -258,8 +258,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         ledState = !ledState;
     }
 }
-int callback(int *function(void))
+int callback(int t1, int (*function1)(void), int (*function)(void))
 {
+    function1();
+    HAL_Delay(t1);
     function();
     return 0;
 }
@@ -298,7 +300,6 @@ void monitor(void)
     }
     if (L1 - L2 > 100 || L2 - L3 > 100 || L3 - L4 > 100 || L4 - L5 > 100) {
         /* code */
-        
         printf("”–»À¥≥»Î\r\n");
     }
     flag++;
