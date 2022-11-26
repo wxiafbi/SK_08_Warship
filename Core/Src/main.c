@@ -115,6 +115,8 @@ int main(void)
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
+        //callback(BEEP_500MS);
+        HAL_Delay(5000);
     }
     /* USER CODE END 3 */
 }
@@ -256,7 +258,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         ledState = !ledState;
     }
 }
-
+int callback(int *function(void))
+{
+    function();
+    return 0;
+}
 char flag = 0;
 int L1 = 0, L2 = 0, L3 = 0, L4 = 0, L5 = 0;
 void monitor(void)
@@ -269,7 +275,7 @@ void monitor(void)
     printf(" L5=%d", L5);
     while (u == 0) {
         /* code */
-        HAL_UART_Transmit(&huart2, (uint8_t *)&str1, 4, 0xffff);
+        HAL_UART_Transmit(&huart2, (uint8_t *)str1, 4, 0xffff);
         u += 1;
         if (finaldata1 > 6000) {
             u = 0;
@@ -292,6 +298,7 @@ void monitor(void)
     }
     if (L1 - L2 > 100 || L2 - L3 > 100 || L3 - L4 > 100 || L4 - L5 > 100) {
         /* code */
+        
         printf("”–»À¥≥»Î\r\n");
     }
     flag++;
