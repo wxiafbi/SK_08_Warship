@@ -54,7 +54,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 void monitor(void);
-int callback(int *function(void));
+int callback(int t1, int (*function1)(void), int (*function)(void));
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

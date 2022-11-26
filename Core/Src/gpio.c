@@ -97,12 +97,17 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 2 */
-int BEEP_500MS(void)
+int BEEP_500MS_on(void)
 {
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-    HAL_Delay(200);
+    printf("Ð¡¾Á\r\n");
+    
+    return 0;
+}
+int BEEP_500MS_off(void)
+{
+    
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
-    HAL_Delay(200);
     printf("Ð¡¾Á\r\n");
     
     return 0;

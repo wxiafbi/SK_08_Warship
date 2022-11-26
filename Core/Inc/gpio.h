@@ -39,7 +39,8 @@ extern "C" {
 void MX_GPIO_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-int BEEP_500MS(void);
+int BEEP_500MS_on(void);
+int BEEP_500MS_off(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
