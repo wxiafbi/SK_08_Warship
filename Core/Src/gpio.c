@@ -100,7 +100,7 @@ void MX_GPIO_Init(void)
 int BEEP_500MS_on(void)
 {
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-    printf("Ð¡¾Á\r\n");
+    printf("¾Á±¦\r\n");
     
     return 0;
 }
@@ -108,7 +108,7 @@ int BEEP_500MS_off(void)
 {
     
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
-    printf("Ð¡¾Á\r\n");
+    printf("¾Á±¦\r\n");
     
     return 0;
 }

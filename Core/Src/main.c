@@ -116,7 +116,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-        callback(500, BEEP_500MS_on, BEEP_500MS_off);
+        callback(200, BEEP_500MS_on, BEEP_500MS_off);
         HAL_Delay(5000);
     }
   /* USER CODE END 3 */
